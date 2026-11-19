@@ -1,10 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Akun')
+@section('title', 'Daftar')
 
 @section('content')
-<div class="card" style="max-width: 480px; margin: 30px auto;">
-    <h1>Daftar Akun</h1>
+<div class="panel" style="max-width: 400px; margin: 40px auto; padding: 24px;">
+    <h1 style="margin-bottom: 4px;">Daftar Akun</h1>
+    <p class="muted" style="margin-bottom: 16px;">Buat akun baru untuk mulai lelang.</p>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
         <label for="name">Nama Lengkap</label>
@@ -18,14 +20,15 @@
 
         <label for="role">Daftar Sebagai</label>
         <select id="role" name="role" required>
-            <option value="klien" {{ old('role') === 'klien' ? 'selected' : '' }}>Klien (Pemasang Proyek)</option>
-            <option value="developer" {{ old('role') === 'developer' ? 'selected' : '' }}>Developer (Penawar Proyek)</option>
+            <option value="klien" {{ old('role') === 'klien' ? 'selected' : '' }}>Klien</option>
+            <option value="developer" {{ old('role') === 'developer' ? 'selected' : '' }}>Developer</option>
         </select>
 
-        <p style="margin-top: 20px; display: flex; align-items: center; gap: 14px;">
-            <button type="submit">Daftar Sekarang</button>
-            <a href="{{ route('login') }}">Sudah punya akun? Masuk</a>
-        </p>
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 14px;">Daftar</button>
     </form>
+
+    <div style="margin-top: 14px; text-align: center; font-size: 13px;">
+        <span class="muted">Sudah punya akun?</span> <a href="{{ route('login') }}">Masuk</a>
+    </div>
 </div>
 @endsection
