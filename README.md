@@ -1,58 +1,78 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Garuda-Hub (Laravel MVC Edition)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Refactoring sistem lelang proyek IT mahasiswa dari PHP Native monolitik (*spaghetti code*) menjadi arsitektur MVC berbasis framework Laravel, database relasional, dan Eloquent ORM.
 
-## About Laravel
+## Ringkasan Perubahan Arsitektur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Komponen | Versi Legacy | Versi Refactor (Laravel) |
+|---|---|---|
+| Arsitektur | 1 file monolitik (`src/index.php`) | MVC terstruktur (`app/`, `resources/views/`, `routes/web.php`) |
+| Basis Data | Skema statis tanpa relasi FK | Migrasi relasional dengan Foreign Key, Indexing & Composite Unique |
+| Akses Data | Raw SQL procedural (`mysqli`) | Eloquent ORM (`User`, `Project`, `Bid`) |
+| Transaksi | Manual `begin_transaction` | `DB::transaction()` atomik untuk pemilihan pemenang lelang |
+| Keamanan | Sesi manual & otentikasi native | Laravel Auth + Role-based Middleware (`klien`, `developer`, `admin`) |
+| Antarmuka | String HTML concatenations | Blade Engine dengan tata letak utilitarian monokrom |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Kebutuhan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.2 (ekstensi `pdo_mysql`, `mbstring`, `openssl`)
+- Composer 2.x
+- MySQL 8.x / MariaDB (misal via Laragon atau XAMPP)
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Panduan Instalasi
 
 ```bash
-composer require laravel/boost --dev
+# 1. Klon dan masuk ke direktori
+git clone https://github.com/arlandoapraharjo/garudaHub.git
+cd garudaHub
+git checkout kelompok-alan
 
-php artisan boost:install
+# 2. Pasang dependensi
+composer install
+
+# 3. Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Pastikan konfigurasi database di .env mengarah ke database Anda:
+# DB_DATABASE=garuda_hub, DB_USERNAME=root, DB_PASSWORD=
+
+# 4. Migrasi dan seeder data
+php artisan migrate:fresh --seed
+
+# 5. Jalankan server lokal
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Aplikasi dapat diakses melalui browser di `http://127.0.0.1:8000`.
 
-## Contributing
+## Akun Demo Pengujian
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Peran | Email | Password | Keterangan |
+|---|---|---|---|
+| Admin | admin@example.com | admin123 | Manajemen pengguna (ubah peran, hapus) dan proyek |
+| Klien | budi@example.com | klien123 | Memasang proyek dan memilih pemenang lelang |
+| Developer | dewi@example.com | dev123 | Menjelajahi proyek dan mengajukan penawaran (*bid*) |
 
-## Code of Conduct
+Pendaftaran akun baru (Klien atau Developer) juga dapat dilakukan via menu pendaftaran.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Skema Database Relasional
 
-## Security Vulnerabilities
+- **users**: `id`, `name`, `email` (UNIQUE), `password`, `role` (enum: klien, developer, admin).
+- **projects**: `id`, `client_id` (FK -> users, CASCADE), `judul`, `deskripsi`, `kategori`, `budget_min`, `budget_max`, `batas_lelang`, `status` (enum: terbuka, ditutup).
+- **bids**: `id`, `project_id` (FK -> projects, CASCADE), `developer_id` (FK -> users, CASCADE), `harga`, `durasi`, `proposal`, `is_winner` (boolean), UNIQUE(`project_id`, `developer_id`).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Riwayat Commit Git (Branch kelompok-alan)
 
-## License
+1. `chore: setup laravel framework structure and dependencies`
+2. `feat(database): create relational migrations for users, projects, and bids`
+3. `feat(models): implement eloquent models with relationships and mass assignment`
+4. `feat(seeders): add database seeders for users, projects, and bids`
+5. `feat(auth): implement authentication and role-based middleware`
+6. `feat(controllers): implement CRUD operations for projects, bidding, and winner selection`
+7. `feat(views): implement blade templates and layout for all modules`
+8. `feat(views): clean up ui to ultra-clean utilitarian monochrome style`
+9. `docs: update readme with laravel setup guide and architectural documentation`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Lisensi
+MIT License.
