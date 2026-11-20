@@ -7,6 +7,15 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
+// Security fallback routes for crawlers/browsers/assets
+Route::get('/robots.txt', fn () => response("User-agent: *\nDisallow:\n", 200, ['Content-Type' => 'text/plain']));
+Route::get('/favicon.ico', fn () => response('', 204));
+Route::get('/sitemap.xml', fn () => response('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>', 200, ['Content-Type' => 'text/xml']));
+Route::get('/css/app.css', fn () => response(file_get_contents(resource_path('css/app.css')), 200, [
+    'Content-Type' => 'text/css; charset=UTF-8',
+    'X-Content-Type-Options' => 'nosniff',
+]));
+
 // Public Project Listing and Details
 Route::get('/', [ProjectController::class, 'index'])->name('home');
 Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
@@ -44,3 +53,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/projects/{project}', [AdminController::class, 'destroyProject'])->name('projects.destroy');
     });
 });
+
+// penugasan [2] The Phantom Vulnerability
+// NIM: 252410102059
+// NAMA: Arlando A'la Putra Raharjo

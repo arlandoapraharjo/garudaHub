@@ -3,82 +3,82 @@
 @section('title', $project->judul)
 
 @section('content')
-<div style="margin-bottom: 12px;">
-    <a href="{{ route('home') }}" class="muted" style="font-size: 13px;">&larr; Kembali ke daftar proyek</a>
+<div class="mb-3">
+    <a href="{{ route('home') }}" class="muted text-base">&larr; Kembali ke daftar proyek</a>
 </div>
 
 {{-- Project Details Panel --}}
 <div class="panel">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 12px;">
+    <div class="flex-between flex-start gap-16 wrap mb-3">
         <div>
-            <h1 style="margin: 0 0 6px 0; font-size: 18px;">
+            <h1 class="m-0 mb-1 text-xl">
                 {{ $project->judul }}
-                <span class="badge {{ $project->status === 'terbuka' ? 'open' : 'closed' }}" style="vertical-align: middle; margin-left: 6px;">
+                <span class="badge {{ $project->status === 'terbuka' ? 'open' : 'closed' }} ml-2">
                     {{ ucfirst($project->status) }}
                 </span>
             </h1>
-            <div class="muted" style="font-size: 12px;">
+            <div class="muted text-sm">
                 Kategori: <b>{{ $project->kategori }}</b> &bull;
                 Klien: <b>{{ $project->client->name }}</b> &bull;
                 Batas Lelang: <span class="text-mono">{{ $project->batas_lelang->format('d M Y') }}</span>
             </div>
         </div>
 
-        <div style="text-align: right;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase;">Alokasi Budget</div>
-            <div class="text-mono" style="font-size: 14px; font-weight: 700;">
+        <div class="text-right">
+            <div class="muted text-xs">ALOKASI BUDGET</div>
+            <div class="text-mono text-md bold text-green">
                 Rp {{ number_format($project->budget_min, 0, ',', '.') }} – {{ number_format($project->budget_max, 0, ',', '.') }}
             </div>
         </div>
     </div>
 
-    <div style="padding-top: 12px; border-top: 1px solid var(--border); font-size: 13px; white-space: pre-line; line-height: 1.6;">
+    <div class="pt-3 border-top text-base pre-line">
         {{ $project->deskripsi }}
     </div>
 </div>
 
 {{-- Bids Table Panel --}}
 <div class="panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2>Daftar Penawaran ({{ $bids->count() }})</h2>
-        <span class="muted" style="font-size: 12px;">Diurutkan dari harga terendah</span>
+    <div class="flex-between mb-2">
+        <h2 class="m-0">Daftar Penawaran ({{ $bids->count() }})</h2>
+        <span class="muted text-sm">Diurutkan dari harga terendah</span>
     </div>
 
     @if($bids->isEmpty())
-        <p class="muted" style="padding: 16px 0;">Belum ada penawaran yang diajukan untuk proyek ini.</p>
+        <p class="muted p-4 text-center">Belum ada penawaran yang diajukan untuk proyek ini.</p>
     @else
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
                         <th>Developer</th>
-                        <th style="text-align: right;">Harga</th>
-                        <th style="text-align: right;">Durasi</th>
+                        <th class="text-right">Harga</th>
+                        <th class="text-right">Durasi</th>
                         <th>Proposal</th>
-                        <th style="text-align: right;">Status / Aksi</th>
+                        <th class="text-right">Status / Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($bids as $bid)
                         <tr class="{{ $bid->is_winner ? 'winner' : '' }}">
-                            <td style="white-space: nowrap;">
+                            <td class="nowrap">
                                 <b>{{ $bid->developer->name }}</b>
                                 @if($bid->is_winner)
-                                    <div><span class="badge win" style="font-size: 10px;">Pemenang</span></div>
+                                    <div><span class="badge win text-xs">Pemenang</span></div>
                                 @endif
                             </td>
-                            <td class="text-mono" style="text-align: right; white-space: nowrap; font-weight: 600;">
+                            <td class="text-mono text-right nowrap semibold">
                                 Rp {{ number_format($bid->harga, 0, ',', '.') }}
                             </td>
-                            <td class="text-mono muted" style="text-align: right; white-space: nowrap;">
+                            <td class="text-mono muted text-right nowrap">
                                 {{ $bid->durasi }} hari
                             </td>
-                            <td style="font-size: 12px; max-width: 340px; white-space: pre-line;">
+                            <td class="text-sm pre-line">
                                 {{ $bid->proposal }}
                             </td>
-                            <td style="text-align: right; white-space: nowrap;">
+                            <td class="text-right nowrap">
                                 @if($isOwner && $project->status === 'terbuka')
-                                    <form method="POST" action="{{ route('bids.pick', [$project, $bid]) }}" onsubmit="return confirm('Pilih {{ $bid->developer->name }} sebagai pemenang? Proyek akan ditutup.');">
+                                    <form method="POST" action="{{ route('bids.pick', [$project, $bid]) }}">
                                         @csrf
                                         <button type="submit" class="sm btn-primary">Pilih Pemenang</button>
                                     </form>
@@ -104,7 +104,7 @@
             @if(!$project->isOpen())
                 <p class="muted">Lelang proyek sudah ditutup; penawaran baru tidak dapat diajukan.</p>
             @elseif($userBid)
-                <div class="alert ok" style="margin-bottom: 0;">
+                <div class="alert ok m-0">
                     Anda sudah mengajukan penawaran: <span class="text-mono">Rp {{ number_format($userBid->harga, 0, ',', '.') }}</span> ({{ $userBid->durasi }} hari).
                 </div>
             @else
@@ -124,7 +124,7 @@
                     <label for="proposal">Proposal Penawaran</label>
                     <textarea id="proposal" name="proposal" required placeholder="Jelaskan rencana pengerjaan, kesiapan stack, dan komitmen waktu Anda...">{{ old('proposal') }}</textarea>
 
-                    <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                    <div class="mt-3 flex-end">
                         <button type="submit" class="btn-primary">Kirim Penawaran</button>
                     </div>
                 </form>
@@ -133,9 +133,9 @@
     @endif
 @else
     @if($project->isOpen())
-        <div class="panel" style="text-align: center; padding: 16px;">
+        <div class="panel text-center p-4">
             <p class="muted">
-                Untuk mengajukan penawaran: <a href="{{ route('login') }}" style="font-weight: 600;">Masuk</a> atau <a href="{{ route('register') }}" style="font-weight: 600;">Daftar</a> sebagai Developer.
+                Untuk mengajukan penawaran: <a href="{{ route('login') }}" class="semibold">Masuk</a> atau <a href="{{ route('register') }}" class="semibold">Daftar</a> sebagai Developer.
             </p>
         </div>
     @endif

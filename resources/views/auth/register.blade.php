@@ -3,9 +3,9 @@
 @section('title', 'Daftar')
 
 @section('content')
-<div class="panel" style="max-width: 400px; margin: 40px auto; padding: 24px;">
-    <h1 style="margin-bottom: 4px;">Daftar Akun</h1>
-    <p class="muted" style="margin-bottom: 16px;">Buat akun baru untuk mulai lelang.</p>
+<div class="panel max-w-auth p-6">
+    <h1 class="mb-1">Daftar Akun</h1>
+    <p class="muted mb-4">Buat akun baru untuk mulai lelang.</p>
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -24,10 +24,10 @@
             <option value="developer" {{ old('role') === 'developer' ? 'selected' : '' }}>Developer</option>
         </select>
 
-        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 14px;">Daftar</button>
+        <button type="submit" class="btn-primary w-full mt-4">Daftar</button>
     </form>
 
-    <div style="margin-top: 14px; text-align: center; font-size: 13px;">
+    <div class="mt-3 text-center text-base">
         <span class="muted">Sudah punya akun?</span> <a href="{{ route('login') }}">Masuk</a>
     </div>
 </div>

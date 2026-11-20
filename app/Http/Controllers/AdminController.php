@@ -34,7 +34,7 @@ class AdminController extends Controller
 
         $user->update(['role' => $validated['role']]);
 
-        return back()->with('success', 'Peran pengguna ' . $user->name . ' berhasil diperbarui.');
+        return back()->with('success', 'Peran pengguna '.$user->name.' berhasil diperbarui.');
     }
 
     /**
@@ -49,7 +49,7 @@ class AdminController extends Controller
         $userName = $user->name;
         $user->delete();
 
-        return back()->with('success', 'Pengguna ' . $userName . ' berhasil dihapus.');
+        return back()->with('success', 'Pengguna '.$userName.' berhasil dihapus.');
     }
 
     /**
@@ -60,6 +60,6 @@ class AdminController extends Controller
         $judul = $project->judul;
         $project->delete();
 
-        return back()->with('success', 'Proyek "' . $judul . '" berhasil dihapus.');
+        return back()->with('success', 'Proyek "'.$judul.'" berhasil dihapus.');
     }
 }

@@ -3,12 +3,12 @@
 @section('title', 'Pasang Proyek')
 
 @section('content')
-<div style="margin-bottom: 12px;">
-    <a href="{{ route('dashboard') }}" class="muted" style="font-size: 13px;">&larr; Kembali ke dasbor</a>
+<div class="mb-3">
+    <a href="{{ route('dashboard') }}" class="muted text-base">&larr; Kembali ke dasbor</a>
 </div>
 
-<div class="panel" style="max-width: 640px; margin: auto;">
-    <h1>Pasang Proyek Baru</h1>
+<div class="panel max-w-form">
+    <h1 class="mb-3">Pasang Proyek Baru</h1>
 
     <form method="POST" action="{{ route('projects.store') }}">
         @csrf
@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 8px;">
+        <div class="mt-4 flex-end gap-8">
             <a href="{{ route('dashboard') }}" class="btn btn-sec">Batal</a>
             <button type="submit" class="btn-primary">Pasang Proyek</button>
         </div>

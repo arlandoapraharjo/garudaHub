@@ -3,9 +3,9 @@
 @section('title', 'Masuk')
 
 @section('content')
-<div class="panel" style="max-width: 380px; margin: 40px auto; padding: 24px;">
-    <h1 style="margin-bottom: 4px;">Masuk</h1>
-    <p class="muted" style="margin-bottom: 16px;">Masuk ke akun Garuda-Hub Anda.</p>
+<div class="panel max-w-auth p-6">
+    <h1 class="mb-1">Masuk</h1>
+    <p class="muted mb-4">Masuk ke akun Garuda-Hub Anda.</p>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
@@ -15,20 +15,20 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required autocomplete="current-password">
 
-        <div style="margin: 10px 0; font-size: 13px;">
-            <label style="display: inline-flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; margin: 0;">
-                <input type="checkbox" name="remember" style="width: auto;"> Ingat saya
+        <div class="my-auto mt-2 mb-2 text-base">
+            <label class="flex items-center gap-6 normal cursor-pointer m-0">
+                <input type="checkbox" name="remember" class="w-auto"> Ingat saya
             </label>
         </div>
 
-        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 8px;">Masuk</button>
+        <button type="submit" class="btn-primary w-full mt-2">Masuk</button>
     </form>
 
-    <div style="margin-top: 14px; text-align: center; font-size: 13px;">
+    <div class="mt-3 text-center text-base">
         <span class="muted">Belum punya akun?</span> <a href="{{ route('register') }}">Daftar</a>
     </div>
 
-    <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 11px;" class="muted">
+    <div class="mt-5 pt-3 border-top text-xs muted">
         <div><strong>Akun Demo:</strong></div>
         <div>Admin: <span class="text-mono">admin@example.com</span> (admin123)</div>
         <div>Klien: <span class="text-mono">budi@example.com</span> (klien123)</div>

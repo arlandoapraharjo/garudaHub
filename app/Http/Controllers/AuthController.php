@@ -40,11 +40,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = Auth::user();
 
             return $this->redirectBasedOnRole($user)
-                ->with('success', 'Selamat datang, ' . $user->name . '.');
+                ->with('success', 'Selamat datang, '.$user->name.'.');
         }
 
         return back()->withErrors([

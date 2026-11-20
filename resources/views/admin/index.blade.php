@@ -3,23 +3,23 @@
 @section('title', 'Admin')
 
 @section('content')
-<div style="margin-bottom: 16px;">
-    <h1 style="margin: 0;">Panel Admin</h1>
-    <p class="muted" style="margin-top: 2px;">Kelola akun pengguna dan daftar proyek.</p>
+<div class="mb-4">
+    <h1 class="m-0">Panel Admin</h1>
+    <p class="muted mt-1">Kelola akun pengguna dan daftar proyek.</p>
 </div>
 
 {{-- Users Table --}}
-<div class="panel" style="padding: 16px;">
+<div class="panel p-4">
     <h2>Pengguna ({{ $users->count() }})</h2>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th style="width: 30px;">ID</th>
+                    <th class="w-30">ID</th>
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Peran</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th class="text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,13 +27,13 @@
                     <tr>
                         <td class="text-mono muted">#{{ $user->id }}</td>
                         <td><b>{{ $user->name }}</b></td>
-                        <td class="text-mono muted" style="font-size: 12px;">{{ $user->email }}</td>
+                        <td class="text-mono muted text-sm">{{ $user->email }}</td>
                         <td>
                             <span class="badge">{{ $user->role }}</span>
                         </td>
-                        <td style="text-align: right; white-space: nowrap;">
+                        <td class="text-right nowrap">
                             @if($user->id === auth()->id())
-                                <span class="muted" style="font-size: 11px;">(Akun Anda)</span>
+                                <span class="muted text-xs">(Akun Anda)</span>
                             @else
                                 <form class="inline" method="POST" action="{{ route('admin.users.role', $user) }}">
                                     @csrf
@@ -45,7 +45,7 @@
                                     <button type="submit" class="sm sec">Ubah</button>
                                 </form>
 
-                                <form class="inline" method="POST" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('Hapus pengguna {{ $user->name }}? Proyek dan bid terkait akan terhapus.');">
+                                <form class="inline" method="POST" action="{{ route('admin.users.destroy', $user) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="sm danger">Hapus</button>
@@ -60,19 +60,19 @@
 </div>
 
 {{-- Projects Table --}}
-<div class="panel" style="padding: 16px;">
+<div class="panel p-4">
     <h2>Proyek ({{ $projects->count() }})</h2>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th style="width: 30px;">ID</th>
+                    <th class="w-30">ID</th>
                     <th>Judul Proyek</th>
                     <th>Klien</th>
                     <th>Kategori</th>
-                    <th style="text-align: right;">Batas Lelang</th>
-                    <th style="text-align: right;">Status</th>
-                    <th style="text-align: right;">Aksi</th>
+                    <th class="text-right">Batas Lelang</th>
+                    <th class="text-right">Status</th>
+                    <th class="text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,17 +84,17 @@
                         </td>
                         <td class="muted">{{ $project->client->name }}</td>
                         <td class="muted">{{ $project->kategori }}</td>
-                        <td class="text-mono muted" style="text-align: right; font-size: 12px;">
+                        <td class="text-mono muted text-right text-sm">
                             {{ $project->batas_lelang->format('d M Y') }}
                         </td>
-                        <td style="text-align: right; white-space: nowrap;">
+                        <td class="text-right nowrap">
                             <span class="badge {{ $project->status === 'terbuka' ? 'open' : 'closed' }}">
                                 {{ ucfirst($project->status) }}
                             </span>
                         </td>
-                        <td style="text-align: right; white-space: nowrap;">
+                        <td class="text-right nowrap">
                             <a class="btn btn-sm btn-sec" href="{{ route('projects.show', $project) }}">Lihat</a>
-                            <form class="inline" method="POST" action="{{ route('admin.projects.destroy', $project) }}" onsubmit="return confirm('Hapus proyek {{ $project->judul }}?');">
+                            <form class="inline" method="POST" action="{{ route('admin.projects.destroy', $project) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="sm danger">Hapus</button>
