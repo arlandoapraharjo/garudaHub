@@ -4,19 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Garuda-Hub') — Garuda-Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
+            --bg: #f8fafc;
             --surface: #ffffff;
-            --surface-subtle: #f9fafb;
-            --border: #e5e7eb;
-            --border-dark: #d1d5db;
-            --text: #111827;
-            --text-secondary: #4b5563;
-            --text-muted: #6b7280;
-            --black: #111827;
-            --radius: 6px;
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --surface-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+            --text: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --primary: #0284c7; /* Freelance Blue */
+            --primary-hover: #0369a1;
+            --black: #0f172a;
+            --radius: 8px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
@@ -27,14 +32,16 @@
             color: var(--text);
             line-height: 1.5;
             font-size: 14px;
+            letter-spacing: -0.011em;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
         a { color: var(--text); text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        a:hover { color: var(--primary); text-decoration: underline; }
 
         /* Ultra-Slim Header */
         header {
@@ -57,7 +64,7 @@
             letter-spacing: -0.01em;
             color: var(--black);
         }
-        .brand:hover { text-decoration: none; }
+        .brand:hover { color: var(--black); text-decoration: none; }
 
         .nav-items {
             display: flex;
@@ -68,9 +75,14 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-        .nav-link:hover, .nav-link.active {
-            color: var(--black);
-            text-decoration: underline;
+        .nav-link:hover {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
         }
 
         .user-section {
@@ -103,13 +115,23 @@
             border-radius: var(--radius);
             padding: 20px;
             margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .panel.interactive:hover, .panel:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
         }
 
         /* Headings */
-        h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px; }
-        h2 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+        h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 12px; }
+        h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 10px; }
         .muted { color: var(--text-muted); font-size: 13px; }
-        .text-mono { font-family: var(--mono); }
+        .text-mono {
+            font-family: var(--font);
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: 'tnum', 'cv02', 'cv03', 'cv04';
+        }
 
         /* Status Badges - Monochrome & Subdued */
         .badge {
@@ -123,9 +145,9 @@
             background: var(--surface-subtle);
         }
         .badge.open {
-            border-color: #a7f3d0;
-            background: #ecfdf5;
-            color: #065f46;
+            border-color: #bae6fd;
+            background: #f0f9ff;
+            color: #0369a1;
         }
         .badge.closed {
             border-color: var(--border);
@@ -152,14 +174,16 @@
             cursor: pointer;
             text-decoration: none;
             line-height: 1.4;
-            transition: background-color 0.1s ease;
+            transition: background-color 0.12s ease, border-color 0.12s ease;
         }
         .btn-primary, button[type="submit"]:not(.sec):not(.danger):not(.text-btn) {
-            background: var(--black);
+            background: var(--primary);
             color: #ffffff;
         }
         .btn-primary:hover, button[type="submit"]:not(.sec):not(.danger):not(.text-btn):hover {
-            background: #27272a;
+            background: var(--primary-hover);
+            color: #ffffff;
+            text-decoration: none;
         }
         .btn-sec, button.sec {
             background: #ffffff;
@@ -169,6 +193,7 @@
         .btn-sec:hover, button.sec:hover {
             background: var(--surface-subtle);
             border-color: var(--border-dark);
+            text-decoration: none;
         }
         .btn-danger, button.danger {
             background: #ffffff;
@@ -177,6 +202,7 @@
         }
         .btn-danger:hover, button.danger:hover {
             background: #fef2f2;
+            text-decoration: none;
         }
         .btn-sm, button.sm {
             padding: 3px 8px;
@@ -191,7 +217,7 @@
             font-weight: 500;
             cursor: pointer;
         }
-        .text-btn:hover { color: var(--black); text-decoration: underline; }
+        .text-btn:hover { color: var(--primary); text-decoration: underline; }
 
         /* Inputs */
         label {
@@ -210,10 +236,12 @@
             background: #ffffff;
             border: 1px solid var(--border-dark);
             border-radius: var(--radius);
+            transition: border-color 0.12s ease, box-shadow 0.12s ease;
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--black);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
         textarea { min-height: 80px; resize: vertical; }
         .row { display: flex; gap: 10px; flex-wrap: wrap; }
