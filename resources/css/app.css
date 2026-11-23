@@ -358,6 +358,7 @@ footer {
 }
 .border-top { border-top: 1px solid var(--border); }
 .text-green { color: #065f46; }
+.text-yellow { color: #d97706; }
 .cursor-pointer { cursor: pointer; }
 .empty-state { text-align: center; padding: 40px 16px; }
 .search-input { width: 240px; }
