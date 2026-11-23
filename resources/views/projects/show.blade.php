@@ -141,7 +141,6 @@
         </div>
     @endif
 @endauth
-
 {{-- Ratings & Reviews Panel --}}
 <div class="panel">
     <div class="flex-between mb-3">
@@ -210,5 +209,9 @@
             @endforeach
         </div>
     @endif
+{{-- Catatan Pengawasan Proyek --}}
+<div class="panel">
+    <h3>Pusat Bantuan & Pengawasan Proyek</h3>
+    <p class="muted">Jika ada kendala pembayaran atau lelang, hubungi administrator kampus.</p>
 </div>
 @endsection
