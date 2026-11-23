@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 
 // Security fallback routes for crawlers/browsers/assets
@@ -32,6 +33,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/projects/{project}/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
     // Klien-only Routes
     Route::middleware('role:klien')->group(function () {

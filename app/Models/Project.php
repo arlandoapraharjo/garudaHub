@@ -58,6 +58,22 @@ class Project extends Model
     }
 
     /**
+     * Ratings submitted for this project.
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    /**
+     * Get average rating score rounded to 1 decimal place.
+     */
+    public function averageRating(): float
+    {
+        return round((float) ($this->ratings()->avg('skor') ?? 0), 1);
+    }
+
+    /**
      * Check if project is currently open for bidding.
      */
     public function isOpen(): bool

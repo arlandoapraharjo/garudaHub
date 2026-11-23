@@ -16,6 +16,8 @@ class ProjectController extends Controller
     {
         $query = Project::with('client')
             ->withCount('bids')
+            ->withCount('ratings')
+            ->withAvg('ratings', 'skor')
             ->latest();
 
         $rawSearch = (string) $request->input('q', '');
@@ -89,7 +91,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project): View
     {
-        $project->load(['client', 'bids.developer']);
+        $project->load(['client', 'bids.developer', 'ratings.user']);
 
         // Urutkan bids berdasarkan harga terendah
         $bids = $project->bids->sortBy('harga');
@@ -97,11 +99,15 @@ class ProjectController extends Controller
         $user = auth()->user();
         $isOwner = $user && $user->id === $project->client_id;
         $userBid = null;
+        $userRating = null;
 
-        if ($user && $user->isDeveloper()) {
-            $userBid = $project->bids->firstWhere('developer_id', $user->id);
+        if ($user) {
+            if ($user->isDeveloper()) {
+                $userBid = $project->bids->firstWhere('developer_id', $user->id);
+            }
+            $userRating = $project->ratings->firstWhere('user_id', $user->id);
         }
 
-        return view('projects.show', compact('project', 'bids', 'isOwner', 'userBid'));
+        return view('projects.show', compact('project', 'bids', 'isOwner', 'userBid', 'userRating'));
     }
 }

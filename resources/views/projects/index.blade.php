@@ -37,6 +37,9 @@
                             {{ ucfirst($project->status) }}
                         </span>
                         <span class="muted text-sm">Dipasang oleh <b>{{ $project->client->name }}</b></span>
+                        @if($project->ratings_count > 0)
+                            <span class="muted text-sm">&bull; <b class="text-yellow">★ {{ number_format($project->ratings_avg_skor, 1) }}</b> ({{ $project->ratings_count }})</span>
+                        @endif
                     </div>
                     <div class="muted text-sm">
                         Batas Lelang: <b class="text-mono">{{ $project->batas_lelang->format('d M Y') }}</b>

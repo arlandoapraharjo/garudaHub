@@ -78,6 +78,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Ratings submitted by this user.
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    /**
      * Role checking helpers.
      */
     public function isKlien(): bool

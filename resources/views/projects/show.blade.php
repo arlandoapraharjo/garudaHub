@@ -20,6 +20,7 @@
             <div class="muted text-sm">
                 Kategori: <b>{{ $project->kategori }}</b> &bull;
                 Klien: <b>{{ $project->client->name }}</b> &bull;
+                Rating: <b class="text-yellow">★ {{ number_format($project->averageRating(), 1) }}</b> ({{ $project->ratings->count() }} ulasan) &bull;
                 Batas Lelang: <span class="text-mono">{{ $project->batas_lelang->format('d M Y') }}</span>
             </div>
         </div>
@@ -140,6 +141,74 @@
         </div>
     @endif
 @endauth
+{{-- Ratings & Reviews Panel --}}
+<div class="panel">
+    <div class="flex-between mb-3">
+        <div>
+            <h2 class="m-0">Rating & Ulasan Proyek</h2>
+            <div class="muted text-sm">
+                Rata-rata: <b class="text-md text-yellow">★ {{ number_format($project->averageRating(), 1) }} / 5.0</b> ({{ $project->ratings->count() }} ulasan)
+            </div>
+        </div>
+    </div>
+
+    {{-- Rating Submission Form for Authenticated Users --}}
+    @auth
+        <div class="mb-4 p-3 border rounded" style="background: var(--surface-subtle);">
+            <h3 class="text-base mb-2">{{ $userRating ? 'Perbarui Rating & Ulasan Anda' : 'Beri Rating untuk Proyek Ini' }}</h3>
+            <form method="POST" action="{{ route('ratings.store', $project) }}">
+                @csrf
+                <div class="row mb-2">
+                    <div style="max-width: 240px;">
+                        <label for="skor">Skor Bintang (1 - 5)</label>
+                        <select id="skor" name="skor" required>
+                            <option value="">Pilih Skor...</option>
+                            @for($i = 5; $i >= 1; $i--)
+                                <option value="{{ $i }}" {{ (old('skor', $userRating?->skor) == $i) ? 'selected' : '' }}>
+                                    {{ str_repeat('★', $i) }} ({{ $i }} Bintang)
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+                <label for="ulasan">Ulasan / Masukan (Opsional)</label>
+                <textarea id="ulasan" name="ulasan" rows="2" placeholder="Bagikan tanggapan Anda tentang proyek ini...">{{ old('ulasan', $userRating?->ulasan) }}</textarea>
+                <div class="mt-2 flex-end">
+                    <button type="submit" class="btn-primary sm">{{ $userRating ? 'Simpan Perubahan' : 'Kirim Rating' }}</button>
+                </div>
+            </form>
+        </div>
+    @else
+        <p class="muted text-sm mb-3">
+            <a href="{{ route('login') }}" class="semibold">Masuk</a> untuk memberikan rating dan ulasan pada proyek ini.
+        </p>
+    @endauth
+
+    {{-- List of Reviews --}}
+    @if($project->ratings->isEmpty())
+        <p class="muted text-center p-3">Belum ada ulasan untuk proyek ini.</p>
+    @else
+        <div class="flex-col gap-12">
+            @foreach($project->ratings as $rating)
+                <div class="p-3 border-bottom">
+                    <div class="flex-between">
+                        <div>
+                            <b>{{ $rating->user->name }}</b>
+                            <span class="muted text-xs ml-1">({{ ucfirst($rating->user->role) }})</span>
+                        </div>
+                        <div class="text-mono bold text-yellow">
+                            {{ str_repeat('★', $rating->skor) }}{{ str_repeat('☆', 5 - $rating->skor) }}
+                            <span class="muted text-xs">({{ $rating->skor }}/5)</span>
+                        </div>
+                    </div>
+                    @if($rating->ulasan)
+                        <div class="text-sm mt-1 pre-line text-secondary">{{ $rating->ulasan }}</div>
+                    @endif
+                    <div class="muted text-xs mt-1">{{ $rating->created_at->diffForHumans() }}</div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 {{-- Catatan Pengawasan Proyek --}}
 <div class="panel">
     <h3>Pusat Bantuan & Pengawasan Proyek</h3>
