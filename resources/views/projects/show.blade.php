@@ -140,4 +140,9 @@
         </div>
     @endif
 @endauth
+{{-- Catatan Pengawasan Proyek --}}
+<div class="panel">
+    <h3>Pusat Bantuan & Pengawasan Proyek</h3>
+    <p class="muted">Jika ada kendala pembayaran atau lelang, hubungi administrator kampus.</p>
+</div>
 @endsection
