@@ -154,12 +154,12 @@
 
     {{-- Rating Submission Form for Authenticated Users --}}
     @auth
-        <div class="mb-4 p-3 border rounded" style="background: var(--surface-subtle);">
+        <div class="mb-4 p-3 border rounded bg-subtle">
             <h3 class="text-base mb-2">{{ $userRating ? 'Perbarui Rating & Ulasan Anda' : 'Beri Rating untuk Proyek Ini' }}</h3>
             <form method="POST" action="{{ route('ratings.store', $project) }}">
                 @csrf
                 <div class="row mb-2">
-                    <div style="max-width: 240px;">
+                    <div class="w-240">
                         <label for="skor">Skor Bintang (1 - 5)</label>
                         <select id="skor" name="skor" required>
                             <option value="">Pilih Skor...</option>
@@ -209,6 +209,8 @@
             @endforeach
         </div>
     @endif
+</div>
+
 {{-- Catatan Pengawasan Proyek --}}
 <div class="panel">
     <h3>Pusat Bantuan & Pengawasan Proyek</h3>
