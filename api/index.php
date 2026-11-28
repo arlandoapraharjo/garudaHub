@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Models\User;
 use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Schema;
 
 header_remove('X-Powered-By');
@@ -48,8 +47,18 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 $app->useStoragePath($tmpStorage);
 
+$request = Request::capture();
+$app->instance('request', $request);
+Facade::clearResolvedInstance('request');
+
 $kernel = $app->make(HttpKernelContract::class);
-$kernel->bootstrap();
+
+try {
+    $kernel->bootstrap();
+} catch (Throwable $e) {
+    error_log('Laravel bootstrap error: '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine());
+    throw $e;
+}
 
 // Auto-run migrations and initial seed once per serverless instance cold start
 $migratedFlag = '/tmp/.migrated';
@@ -67,6 +76,5 @@ if (! file_exists($migratedFlag)) {
     }
 }
 
-$request = Request::capture();
 $response = $kernel->handle($request)->send();
 $kernel->terminate($request, $response);
