@@ -6,6 +6,7 @@ use App\Models\Bid;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -196,6 +197,13 @@ class DatabaseSeeder extends Seeder
 
         foreach ($bids as $bidData) {
             Bid::updateOrCreate(['id' => $bidData['id']], $bidData);
+        }
+
+        // Synchronize PostgreSQL sequences after explicit ID inserts
+        if (DB::getDriverName() === 'pgsql') {
+            foreach (['users', 'projects', 'bids'] as $table) {
+                DB::statement("SELECT setval(pg_get_serial_sequence('{$table}', 'id'), COALESCE((SELECT MAX(id) FROM {$table}), 1), true)");
+            }
         }
     }
 }
